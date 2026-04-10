@@ -1,0 +1,41 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "HF Space: auto-deploy on save (default)",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python hf_family_search/deploy_to_hf.py",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "problemMatcher": {
+        "owner": "hf-deploy-watch",
+        "pattern": { "regexp": "^$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "^Watching "
+        }
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated",
+        "focus": false
+      }
+    },
+    {
+      "label": "HF Space: deploy once",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python hf_family_search/deploy_to_hf.py --once",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {}
+      },
+      "problemMatcher": []
+    }
+  ]
+}

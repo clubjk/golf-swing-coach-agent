@@ -1,0 +1,6 @@
+python-dotenv
+gradio
+openai
+anthropic>=0.40.0
+boto3>=1.34.0
+osxphotos>=0.68.0

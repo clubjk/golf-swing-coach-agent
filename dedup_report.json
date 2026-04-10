@@ -1,0 +1,176 @@
+{
+  "generated_at": "2026-04-01T13:20:32.252746",
+  "album": "Family Photo Grabbag",
+  "total_items": 281,
+  "exact_duplicate_groups": [
+    {
+      "keep": "DSC03625.JPG",
+      "remove": [
+        "DSC03625.JPG"
+      ],
+      "uuids_to_remove": [
+        "A49D404F-7951-45BF-84FE-2438A952AF28"
+      ]
+    },
+    {
+      "keep": "DSC03626.JPG",
+      "remove": [
+        "DSC03626.JPG"
+      ],
+      "uuids_to_remove": [
+        "97E936C6-973A-4998-AE44-BC013957D675"
+      ]
+    },
+    {
+      "keep": "DSC03628.JPG",
+      "remove": [
+        "DSC03628.JPG"
+      ],
+      "uuids_to_remove": [
+        "F81A1FC4-7F83-459A-B17B-3718C8A6628E"
+      ]
+    },
+    {
+      "keep": "DSC03633.JPG",
+      "remove": [
+        "DSC03633.JPG"
+      ],
+      "uuids_to_remove": [
+        "96E15074-10F6-4079-BAF6-7AC990277EF9"
+      ]
+    },
+    {
+      "keep": "DSC03638.JPG",
+      "remove": [
+        "DSC03638.JPG"
+      ],
+      "uuids_to_remove": [
+        "D70D72A8-7BAE-4346-AD3B-93E67049708F"
+      ]
+    },
+    {
+      "keep": "annaaaaah!!!.JPG",
+      "remove": [
+        "annaaaaah!!!.JPG"
+      ],
+      "uuids_to_remove": [
+        "9A770489-895C-47D1-A2DA-C7C4777721D8"
+      ]
+    },
+    {
+      "keep": "DSC03670.JPG",
+      "remove": [
+        "DSC03670.JPG"
+      ],
+      "uuids_to_remove": [
+        "BE7AC212-8546-4CFD-AD81-BE63F4C9FDD6"
+      ]
+    },
+    {
+      "keep": "IMG00296.jpg",
+      "remove": [
+        "IMG00296.jpg"
+      ],
+      "uuids_to_remove": [
+        "C5C5693F-418B-4D98-9182-684AC80D7FCD"
+      ]
+    }
+  ],
+  "near_duplicate_groups": [
+    {
+      "keep": "IMG00311.jpg",
+      "remove": [
+        "IMG00312.jpg",
+        "IMG_0349.JPG"
+      ],
+      "uuids_to_remove": [
+        "8AF5B0C4-AFBF-4D01-821C-29F203A6AFC5",
+        "E267177A-AF39-47F3-A6F1-8CEB14A9BD5C"
+      ]
+    },
+    {
+      "keep": "DSC03633.JPG",
+      "remove": [
+        "DSC03633.JPG",
+        "DSC03637.JPG"
+      ],
+      "uuids_to_remove": [
+        "96E15074-10F6-4079-BAF6-7AC990277EF9",
+        "A935B638-C972-4BD9-9BB4-321BA3C2D079"
+      ]
+    },
+    {
+      "keep": "DSC03648.JPG",
+      "remove": [
+        "redbeard.JPG"
+      ],
+      "uuids_to_remove": [
+        "3F3054A2-9B8F-47A1-9D40-8FB84086CF8C"
+      ]
+    },
+    {
+      "keep": "DSC04315.JPG",
+      "remove": [
+        "IMG00307.jpg",
+        "IMG00272.jpg",
+        "IMG00274.jpg",
+        "IMG00273.jpg"
+      ],
+      "uuids_to_remove": [
+        "76B2072C-D889-4BF6-97C5-CA9429F9C437",
+        "59962568-40BB-432C-93F6-CDBA368D0541",
+        "DB4C40E4-2838-4B14-A8F5-781CAF9C098E",
+        "FA6D0219-C806-4549-8DD2-4B1B899E51D9"
+      ]
+    },
+    {
+      "keep": "IMG00309.jpg",
+      "remove": [
+        "IMG00270.jpg"
+      ],
+      "uuids_to_remove": [
+        "71E39823-E3DC-49B5-B750-AD2635B6C25F"
+      ]
+    },
+    {
+      "keep": "IMG00308.jpg",
+      "remove": [
+        "IMG00288.jpg",
+        "IMG00313.jpg",
+        "IMG00314.jpg"
+      ],
+      "uuids_to_remove": [
+        "5442B5C6-431E-4451-8220-BD14A0366091",
+        "721FAE23-9F58-4AC3-A259-7CBAC15A9404",
+        "D8FD1C0C-00F6-49AC-A790-FB4DA343257D"
+      ]
+    },
+    {
+      "keep": "IMG00303.jpg",
+      "remove": [
+        "IMG00306.jpg"
+      ],
+      "uuids_to_remove": [
+        "D4127CC4-4041-496D-8B29-7709EDAF6CF9"
+      ]
+    },
+    {
+      "keep": "IMG00318.jpg",
+      "remove": [
+        "IMG00317.jpg"
+      ],
+      "uuids_to_remove": [
+        "8BC0BA24-46C3-4F81-A416-CE185A9CB1AC"
+      ]
+    },
+    {
+      "keep": "IMG_0172.jpg",
+      "remove": [
+        "Feb 2011 Iphone Photos and Videos 117.jpg"
+      ],
+      "uuids_to_remove": [
+        "7BFF6F06-1699-4AA8-9FF0-06AB5D1F91D9"
+      ]
+    }
+  ]
+}
