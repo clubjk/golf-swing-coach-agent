@@ -13,75 +13,105 @@ class GolfSwingAnalyzerTool(BaseTool):
     args_schema: type[BaseModel] = SwingAnalyzerInput
 
     def _run(self, video_path: str, user_goal: str = "general improvement") -> Dict[str, Any]:
+        print(f"🔍 Starting video analysis for: {video_path}")
+        print(f"🎯 User goal: {user_goal}")
+        
         try:
             import cv2
             import mediapipe as mp
             from utils.pose_utils import calculate_angle, detect_swing_phases
+            print("✅ Imports successful")
         except ImportError as e:
+            print(f"❌ Import error: {e}")
             return {"error": f"Failed to import required libraries: {e}"}
         
         if not os.path.exists(video_path):
+            print(f"❌ Video file not found: {video_path}")
             return {"error": f"Video not found: {video_path}"}
 
-        cap = cv2.VideoCapture(video_path)
-        if not cap.isOpened():
-            cap = cv2.VideoCapture(video_path, cv2.CAP_FFMPEG)
+        print(f"📹 Found video file: {video_path}")
+        
+        try:
+            cap = cv2.VideoCapture(video_path)
+            if not cap.isOpened():
+                print("⚠️  Primary VideoCapture failed, trying with FFMPEG")
+                cap = cv2.VideoCapture(video_path, cv2.CAP_FFMPEG)
 
-        fps = int(cap.get(cv2.CAP_PROP_FPS))
-        width = int(cap.get(3))
-        height = int(cap.get(4))
+            if not cap.isOpened():
+                print("❌ Video capture failed to open")
+                return {"error": "Could not open video file"}
 
-        print(f"🍎 Processing video on Apple Silicon: {width}x{height} @ {fps} fps")
+            fps = int(cap.get(cv2.CAP_PROP_FPS))
+            width = int(cap.get(3))
+            height = int(cap.get(4))
+            print(f"📐 Video specs: {width}x{height} @ {fps} fps")
 
-        mp_pose = mp.solutions.pose
-        pose = mp_pose.Pose(model_complexity=1, min_detection_confidence=0.5)
+            mp_pose = mp.solutions.pose
+            pose = mp_pose.Pose(model_complexity=1, min_detection_confidence=0.5)
+            print("🤖 MediaPipe pose model initialized")
 
-        os.makedirs("/tmp/outputs", exist_ok=True)
-        output_path = f"/tmp/outputs/annotated_{os.path.basename(video_path).rsplit('.', 1)[0]}.mp4"
+            os.makedirs("/tmp/outputs", exist_ok=True)
+            output_path = f"/tmp/outputs/annotated_{os.path.basename(video_path).rsplit('.', 1)[0]}.mp4"
+            print(f"💾 Output path: {output_path}")
 
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
-        frames_data = []
-        frame_num = 0
+            frames_data = []
+            frame_num = 0
+            processed_frames = 0
 
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if not ret:
-                break
+            while cap.isOpened() and frame_num < 300:  # Limit to 300 frames for testing
+                ret, frame = cap.read()
+                if not ret:
+                    print(f"📋 Finished reading {frame_num} frames")
+                    break
 
-            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            results = pose.process(rgb)
+                rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                results = pose.process(rgb)
 
-            if results.pose_landmarks:
-                # Draw skeleton
-                mp.solutions.drawing_utils.draw_landmarks(
-                    frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+                if results.pose_landmarks:
+                    # Draw skeleton
+                    mp.solutions.drawing_utils.draw_landmarks(
+                        frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
-                landmarks = results.pose_landmarks.landmark
-                wrist_hinge = calculate_angle(
-                    landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER],
-                    landmarks[mp_pose.PoseLandmark.LEFT_ELBOW],
-                    landmarks[mp_pose.PoseLandmark.LEFT_WRIST]
-                )
+                    landmarks = results.pose_landmarks.landmark
+                    try:
+                        wrist_hinge = calculate_angle(
+                            landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER],
+                            landmarks[mp_pose.PoseLandmark.LEFT_ELBOW],
+                            landmarks[mp_pose.PoseLandmark.LEFT_WRIST]
+                        )
+                        frames_data.append({"frame": frame_num, "wrist_hinge": wrist_hinge})
+                        processed_frames += 1
+                    except Exception as e:
+                        print(f"⚠️  Error calculating angle: {e}")
 
-                frames_data.append({"frame": frame_num, "wrist_hinge": wrist_hinge})
+                out.write(frame)
+                frame_num += 1
 
-            out.write(frame)
-            frame_num += 1
+            cap.release()
+            out.release()
+            print(f"✅ Processed {processed_frames} frames with pose data")
 
-        cap.release()
-        out.release()
+            phases = detect_swing_phases(frames_data)
 
-        phases = detect_swing_phases(frames_data)
-
-        return {
-            "status": "success",
-            "metrics": {
-                "phases": phases,
+            result = {
+                "status": "success",
+                "metrics": {
+                    "phases": phases,
+                    "annotated_video_path": output_path,
+                    "frame_count": frame_num,
+                    "processed_frames": processed_frames
+                },
                 "annotated_video_path": output_path,
-                "frame_count": frame_num
-            },
-            "annotated_video_path": output_path,
-            "message": f"Analyzed {frame_num} frames. Goal: {user_goal}"
-        }
+                "message": f"Analyzed {frame_num} frames, {processed_frames} with pose data. Goal: {user_goal}"
+            }
+            print(f"🎉 Analysis complete: {result['message']}")
+            return result
+            
+        except Exception as e:
+            print(f"💥 Unexpected error during analysis: {e}")
+            import traceback
+            traceback.print_exc()
+            return {"error": f"Analysis failed: {str(e)}"}
