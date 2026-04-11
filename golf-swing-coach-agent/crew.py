@@ -42,8 +42,8 @@ def run_golf_crew(video_path: str, user_goal: str = "general improvement"):
     # ==================== TASKS ====================
 
     task1 = Task(
-        description="Analyze the golf swing video at this path: {video_path}. User goal: {user_goal}. Return structured metrics and the path to the annotated video.",
-        expected_output="JSON containing phases, key angles, annotated_video_path, and summary.",
+        description="Use the Golf Swing Pose Analyzer tool to analyze the golf swing video at this path: {video_path}. Extract biomechanical metrics using MediaPipe, detect swing phases, and return structured data about the swing. User goal: {user_goal}.",
+        expected_output="Complete analysis results from the Golf Swing Pose Analyzer tool, including JSON metrics, swing phases, key angles, and annotated video path.",
         agent=vision_analyst,
         tools=[GolfSwingAnalyzerTool()]
     )
