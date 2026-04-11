@@ -32,6 +32,11 @@ class GolfSwingAnalyzerTool(BaseTool):
         print(f"📹 Found video file: {video_path}")
         
         try:
+            # Set headless backend for OpenCV
+            cv2.setUseOptimized(True)
+            if hasattr(cv2, 'ocl'):
+                cv2.ocl.setUseOpenCL(False)
+            
             cap = cv2.VideoCapture(video_path)
             if not cap.isOpened():
                 print("⚠️  Primary VideoCapture failed, trying with FFMPEG")
@@ -39,23 +44,34 @@ class GolfSwingAnalyzerTool(BaseTool):
 
             if not cap.isOpened():
                 print("❌ Video capture failed to open")
-                return {"error": "Could not open video file"}
+                return {"error": "Could not open video file - unsupported format or corrupted file"}
 
             fps = int(cap.get(cv2.CAP_PROP_FPS))
             width = int(cap.get(3))
             height = int(cap.get(4))
             print(f"📐 Video specs: {width}x{height} @ {fps} fps")
 
+            # Initialize MediaPipe with headless settings
             mp_pose = mp.solutions.pose
-            pose = mp_pose.Pose(model_complexity=1, min_detection_confidence=0.5)
+            pose = mp_pose.Pose(
+                model_complexity=1, 
+                min_detection_confidence=0.5,
+                static_image_mode=False
+            )
             print("🤖 MediaPipe pose model initialized")
 
             os.makedirs("/tmp/outputs", exist_ok=True)
             output_path = f"/tmp/outputs/annotated_{os.path.basename(video_path).rsplit('.', 1)[0]}.mp4"
             print(f"💾 Output path: {output_path}")
 
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            # Use a more compatible codec
+            fourcc = cv2.VideoWriter_fourcc(*'avc1')  # H.264 codec
             out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+
+            if not out.isOpened():
+                print("⚠️  H.264 failed, trying MP4V")
+                fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+                out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
             frames_data = []
             frame_num = 0
@@ -67,32 +83,38 @@ class GolfSwingAnalyzerTool(BaseTool):
                     print(f"📋 Finished reading {frame_num} frames")
                     break
 
-                rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                results = pose.process(rgb)
+                try:
+                    rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                    results = pose.process(rgb)
 
-                if results.pose_landmarks:
-                    # Draw skeleton
-                    mp.solutions.drawing_utils.draw_landmarks(
-                        frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+                    if results.pose_landmarks:
+                        # Draw skeleton
+                        mp.solutions.drawing_utils.draw_landmarks(
+                            frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
-                    landmarks = results.pose_landmarks.landmark
-                    try:
-                        wrist_hinge = calculate_angle(
-                            landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER],
-                            landmarks[mp_pose.PoseLandmark.LEFT_ELBOW],
-                            landmarks[mp_pose.PoseLandmark.LEFT_WRIST]
-                        )
-                        frames_data.append({"frame": frame_num, "wrist_hinge": wrist_hinge})
-                        processed_frames += 1
-                    except Exception as e:
-                        print(f"⚠️  Error calculating angle: {e}")
+                        landmarks = results.pose_landmarks.landmark
+                        try:
+                            wrist_hinge = calculate_angle(
+                                landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER],
+                                landmarks[mp_pose.PoseLandmark.LEFT_ELBOW],
+                                landmarks[mp_pose.PoseLandmark.LEFT_WRIST]
+                            )
+                            frames_data.append({"frame": frame_num, "wrist_hinge": wrist_hinge})
+                            processed_frames += 1
+                        except Exception as e:
+                            print(f"⚠️  Error calculating angle: {e}")
 
-                out.write(frame)
-                frame_num += 1
+                    out.write(frame)
+                    frame_num += 1
+                except Exception as e:
+                    print(f"⚠️  Error processing frame {frame_num}: {e}")
+                    frame_num += 1
+                    continue
 
             cap.release()
             out.release()
-            print(f"✅ Processed {processed_frames} frames with pose data")
+            pose.close()
+            print(f"✅ Processed {processed_frames} frames with pose data out of {frame_num} total frames")
 
             phases = detect_swing_phases(frames_data)
 
@@ -105,7 +127,7 @@ class GolfSwingAnalyzerTool(BaseTool):
                     "processed_frames": processed_frames
                 },
                 "annotated_video_path": output_path,
-                "message": f"Analyzed {frame_num} frames, {processed_frames} with pose data. Goal: {user_goal}"
+                "message": f"Successfully analyzed {frame_num} frames, {processed_frames} with pose data. Goal: {user_goal}"
             }
             print(f"🎉 Analysis complete: {result['message']}")
             return result
@@ -114,4 +136,4 @@ class GolfSwingAnalyzerTool(BaseTool):
             print(f"💥 Unexpected error during analysis: {e}")
             import traceback
             traceback.print_exc()
-            return {"error": f"Analysis failed: {str(e)}"}
+            return {"error": f"Analysis failed due to technical issues: {str(e)}. This may be due to missing system libraries in the cloud environment."}
