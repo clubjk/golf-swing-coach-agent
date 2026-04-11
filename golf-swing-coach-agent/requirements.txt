@@ -3,7 +3,7 @@ crewai-tools>=1.9.3
 langchain-openai>=0.3.23
 moviepy>=2.2.1
 numpy>=1.21.1,<2
-opencv-python==4.9.0.80
+opencv-python-headless==4.9.0.80
 mediapipe>=0.10.15
 pydantic>=2.11.10
 rich>=14.3.4
