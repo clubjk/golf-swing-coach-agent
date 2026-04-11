@@ -133,7 +133,54 @@ class GolfSwingAnalyzerTool(BaseTool):
             return result
             
         except Exception as e:
-            print(f"💥 Unexpected error during analysis: {e}")
+            print(f"💥 Full analysis failed: {e}")
             import traceback
             traceback.print_exc()
-            return {"error": f"Analysis failed due to technical issues: {str(e)}. This may be due to missing system libraries in the cloud environment."}
+            
+            # Fallback to demo analysis
+            print("🔄 Falling back to demo analysis mode")
+            return self._demo_analysis(video_path, user_goal)
+    
+    def _demo_analysis(self, video_path: str, user_goal: str = "general improvement") -> Dict[str, Any]:
+        """Provide demo analysis when full computer vision isn't available"""
+        print("🎭 Running demo analysis mode")
+        
+        # Get basic video info without OpenCV
+        try:
+            file_size = os.path.getsize(video_path) / (1024 * 1024)  # MB
+            file_name = os.path.basename(video_path)
+            
+            # Mock analysis results
+            mock_metrics = {
+                "phases": {
+                    "address": "detected",
+                    "backswing": "detected", 
+                    "downswing": "detected",
+                    "impact": "detected",
+                    "follow_through": "detected"
+                },
+                "key_angles": {
+                    "shoulder_turn": 85,
+                    "hip_turn": 45,
+                    "wrist_hinge": 90
+                },
+                "swing_tempo": "moderate",
+                "video_info": f"Demo analysis of {file_name} ({file_size:.1f} MB)"
+            }
+            
+            result = {
+                "status": "demo",
+                "metrics": mock_metrics,
+                "annotated_video_path": video_path,  # Return original video
+                "message": f"Demo analysis completed for {user_goal}. Full AI analysis requires additional system libraries.",
+                "demo_note": "This is a demonstration of the analysis capabilities. In production, this would provide detailed biomechanical feedback."
+            }
+            
+            print(f"🎭 Demo analysis complete: {result['message']}")
+            return result
+            
+        except Exception as e:
+            print(f"💥 Even demo analysis failed: {e}")
+            return {
+                "error": f"Unable to analyze video due to technical limitations: {str(e)}"
+            }
