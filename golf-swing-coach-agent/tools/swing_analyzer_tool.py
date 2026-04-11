@@ -1,7 +1,5 @@
 from crewai.tools import BaseTool
 from pydantic import BaseModel, Field
-import cv2
-import mediapipe as mp
 import os
 from typing import Dict, Any
 from utils.pose_utils import calculate_angle, detect_swing_phases
@@ -16,6 +14,12 @@ class GolfSwingAnalyzerTool(BaseTool):
     args_schema: type[BaseModel] = SwingAnalyzerInput
 
     def _run(self, video_path: str, user_goal: str = "general improvement") -> Dict[str, Any]:
+        try:
+            import cv2
+            import mediapipe as mp
+        except ImportError as e:
+            return {"error": f"Failed to import required libraries: {e}"}
+        
         if not os.path.exists(video_path):
             return {"error": f"Video not found: {video_path}"}
 
