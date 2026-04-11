@@ -37,6 +37,11 @@ if uploaded_file and st.button("🚀 Analyze Swing with Agent Crew"):
         # Run the CrewAI
         result = run_golf_crew(video_path, user_goal)
 
+        # Check if there was an error
+        if isinstance(result, dict) and "error" in result:
+            st.error(f"❌ Analysis Failed: {result['error']}")
+            st.stop()
+
     st.success("✅ Analysis Complete!")
 
     col1, col2 = st.columns([3, 2])

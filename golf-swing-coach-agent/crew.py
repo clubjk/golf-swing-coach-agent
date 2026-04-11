@@ -3,9 +3,21 @@ def run_golf_crew(video_path: str, user_goal: str = "general improvement"):
     from crewai import Agent, Task, Crew
     from tools.swing_analyzer_tool import GolfSwingAnalyzerTool
     from langchain_openai import ChatOpenAI
+    import os
 
-    # Create LLM instance
-    llm = ChatOpenAI(model="gpt-4o", temperature=0.3)
+    # Check if OpenAI API key is available
+    if not os.getenv("OPENAI_API_KEY"):
+        return {
+            "error": "OpenAI API key not configured. Please set the OPENAI_API_KEY environment variable or add it to your Streamlit Cloud secrets."
+        }
+
+    try:
+        # Create LLM instance
+        llm = ChatOpenAI(model="gpt-4o", temperature=0.3)
+    except Exception as e:
+        return {
+            "error": f"Failed to initialize OpenAI client: {str(e)}. Please check your OpenAI API key configuration."
+        }
 
     # ==================== AGENTS ====================
 
