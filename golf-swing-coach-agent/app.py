@@ -11,7 +11,7 @@ st.caption("Record on iPhone → Upload → Get critique from Vision Analyst + B
 
 uploaded_file = st.file_uploader(
     "Upload your iPhone golf swing video (.mov or .mp4)",
-    type=["mov", "mp4", "MOV", "MP4"],
+    type=[".mov", ".mp4", ".MOV", ".MP4"],
     help="For best performance, keep videos under 10MB. If your video is larger, compress it using: ffmpeg -i input.mp4 -vf scale=640:-1 -c:v libx264 -crf 28 -preset fast output.mp4"
 )
 
