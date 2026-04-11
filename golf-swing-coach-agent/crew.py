@@ -4,8 +4,8 @@ def run_golf_crew(video_path: str, user_goal: str = "general improvement"):
     from tools.swing_analyzer_tool import GolfSwingAnalyzerTool
     from langchain_openai import ChatOpenAI
 
-    # Use gpt-4o (or change to grok / claude if you prefer)
-    llm = "gpt-4o"
+    # Create LLM instance
+    llm = ChatOpenAI(model="gpt-4o", temperature=0.3)
 
     # ==================== AGENTS ====================
 
@@ -15,7 +15,6 @@ def run_golf_crew(video_path: str, user_goal: str = "general improvement"):
         backstory="You are an expert in sports computer vision. You process videos carefully and return clean structured data.",
         tools=[GolfSwingAnalyzerTool()],
         llm=llm,
-        temperature=0.3,
         verbose=True
     )
 
@@ -24,7 +23,6 @@ def run_golf_crew(video_path: str, user_goal: str = "general improvement"):
         goal="Analyze the pose metrics and identify the top 2-3 swing flaws",
         backstory="You have deep knowledge of golf swing mechanics and common amateur faults.",
         llm=llm,
-        temperature=0.3,
         verbose=True
     )
 
@@ -33,7 +31,6 @@ def run_golf_crew(video_path: str, user_goal: str = "general improvement"):
         goal="Turn technical analysis into friendly, actionable coaching advice with specific drills",
         backstory="You are a patient and motivating golf coach who helps players improve quickly.",
         llm=llm,
-        temperature=0.3,
         verbose=True
     )
 
