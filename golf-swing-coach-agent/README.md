@@ -45,9 +45,9 @@ This app is configured for automatic deployment to Hugging Face Spaces.
 3. Create a new Hugging Face Space:
    - Go to [huggingface.co/spaces](https://huggingface.co/spaces)
    - Click "Create new Space"
-   - Choose "Streamlit" as the SDK
-   - Connect it to your GitHub repository
-   - Set the repository to your new repo
+   - Choose "Docker" as the SDK
+   - Connect it to your GitHub repository (`clubjk/golf-swing-coach-agent`)
+   - Set the main branch to `main`
 
 4. Add the OpenAI API key as a secret:
    - In your Space settings, go to "Secrets"
