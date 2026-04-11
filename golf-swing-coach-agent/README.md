@@ -1,3 +1,14 @@
+---
+title: Golf Swing Coach Agent
+emoji: ⛳
+colorFrom: blue
+colorTo: green
+sdk: docker
+sdk_version: latest
+app_file: app.py
+pinned: false
+---
+
 # Golf Swing Coach Agent
 
 An AI-powered golf swing analysis app using CrewAI agents and MediaPipe pose detection.
