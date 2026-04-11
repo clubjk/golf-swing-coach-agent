@@ -11,7 +11,6 @@ st.caption("Record on iPhone → Upload → Get critique from Vision Analyst + B
 
 uploaded_file = st.file_uploader(
     "Upload your iPhone golf swing video (.mov or .mp4)",
-    type=[".mov", ".mp4", ".MOV", ".MP4"],
     help="For best performance, keep videos under 10MB. If your video is larger, compress it using: ffmpeg -i input.mp4 -vf scale=640:-1 -c:v libx264 -crf 28 -preset fast output.mp4"
 )
 
@@ -22,6 +21,11 @@ user_goal = st.text_input(
 )
 
 if uploaded_file and st.button("🚀 Analyze Swing with Agent Crew"):
+    # Check file type
+    if not uploaded_file.name.lower().endswith(('.mp4', '.mov')):
+        st.error("Please upload a .mp4 or .mov video file.")
+        st.stop()
+    
     with st.spinner("Running full agent crew... (Vision → Biomechanics → Coaching). This may take 45-90 seconds."):
         # Save uploaded file
         os.makedirs("/tmp/sample_swings", exist_ok=True)
