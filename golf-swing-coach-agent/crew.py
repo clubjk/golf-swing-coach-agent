@@ -25,7 +25,6 @@ def run_golf_crew(video_path: str, user_goal: str = "general improvement"):
         role="Vision Analyst",
         goal="Accurately extract biomechanical metrics from iPhone golf swing videos using MediaPipe",
         backstory="You are an expert in sports computer vision. You process videos carefully and return clean structured data.",
-        tools=[GolfSwingAnalyzerTool()],
         llm=llm,
         verbose=True
     )
@@ -51,7 +50,8 @@ def run_golf_crew(video_path: str, user_goal: str = "general improvement"):
     task1 = Task(
         description="Analyze the golf swing video at this path: {video_path}. User goal: {user_goal}. Return structured metrics and the path to the annotated video.",
         expected_output="JSON containing phases, key angles, annotated_video_path, and summary.",
-        agent=vision_analyst
+        agent=vision_analyst,
+        tools=[GolfSwingAnalyzerTool()]
     )
 
     task2 = Task(
