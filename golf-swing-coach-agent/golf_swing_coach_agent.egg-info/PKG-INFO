@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: golf-swing-coach-agent
+Version: 0.1.0
+Summary: Add your description here
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: crewai>=1.9.3
+Requires-Dist: crewai-tools>=1.9.3
+Requires-Dist: langchain-openai>=0.3.23
+Requires-Dist: moviepy>=2.2.1
+Requires-Dist: numpy>=2.4.4
+Requires-Dist: opencv-python>=4.13.0.92
+Requires-Dist: pydantic>=2.11.10
+Requires-Dist: rich>=14.3.4
+Requires-Dist: streamlit>=1.56.0
