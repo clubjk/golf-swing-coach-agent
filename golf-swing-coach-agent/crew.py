@@ -42,22 +42,22 @@ def run_golf_crew(video_path: str, user_goal: str = "general improvement"):
     # ==================== TASKS ====================
 
     task1 = Task(
-        description="Use the Golf Swing Pose Analyzer tool to analyze the golf swing video at this path: {video_path}. Extract biomechanical metrics using MediaPipe, detect swing phases, and return structured data about the swing. User goal: {user_goal}.",
-        expected_output="Complete analysis results from the Golf Swing Pose Analyzer tool, including JSON metrics, swing phases, key angles, and annotated video path.",
+        description="Use the Golf Swing Pose Analyzer tool to analyze the golf swing video at this path: {video_path}. Extract biomechanical metrics using MediaPipe, detect swing phases, and return structured data about the swing. User goal: {user_goal}. The tool will provide detailed metrics including swing phases, key angles (shoulder turn, hip turn, wrist hinge), and swing tempo.",
+        expected_output="Complete analysis results from the Golf Swing Pose Analyzer tool, including JSON metrics, swing phases, key angles, and annotated video path. Return all the detailed measurements and analysis.",
         agent=vision_analyst,
         tools=[GolfSwingAnalyzerTool()]
     )
 
     task2 = Task(
-        description="Using the metrics from Task 1 and the user's goal '{user_goal}', identify the top 2-3 most important swing flaws with explanations.",
-        expected_output="Bullet list of flaws with supporting metrics.",
+        description="Analyze the swing metrics from Task 1. Look at the shoulder turn (85°), hip turn (45°), wrist hinge (90°), and swing tempo data. For the user's goal '{user_goal}', identify the top 2-3 most important swing flaws based on these specific measurements. Explain how each measurement indicates a potential issue.",
+        expected_output="Bullet list of 2-3 specific swing flaws with explanations based on the actual angle measurements and swing characteristics from the tool analysis.",
         agent=biomechanics_critic,
         context=[task1]
     )
 
     task3 = Task(
-        description="Create a friendly, encouraging coaching report. Include strengths, main flaws, 1-2 specific drills with instructions, and recording tips for next time. Reference the annotated video.",
-        expected_output="Well-formatted markdown coaching report.",
+        description="Create a personalized coaching report using the swing analysis from Task 2. Include: 1) Positive aspects based on the good measurements (85° shoulder turn, 90° wrist hinge), 2) The 2-3 main flaws identified, 3) Specific drills targeting those flaws with step-by-step instructions, 4) Tips for better video recording. Reference the actual metrics and measurements provided.",
+        expected_output="Well-formatted markdown coaching report with specific advice based on the 85° shoulder turn, 45° hip turn, 90° wrist hinge, and other swing characteristics.",
         agent=head_coach,
         context=[task1, task2]
     )

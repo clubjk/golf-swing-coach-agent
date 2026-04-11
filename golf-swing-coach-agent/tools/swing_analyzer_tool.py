@@ -173,7 +173,27 @@ class GolfSwingAnalyzerTool(BaseTool):
                 "metrics": mock_metrics,
                 "annotated_video_path": video_path,  # Return original video
                 "message": f"Demo analysis completed for {user_goal}. Full AI analysis requires additional system libraries.",
-                "demo_note": "This is a demonstration of the analysis capabilities. In production, this would provide detailed biomechanical feedback."
+                "demo_note": "This is a demonstration of the analysis capabilities. In production, this would provide detailed biomechanical feedback.",
+                "analysis_summary": f"""
+## Demo Swing Analysis Results
+
+**Swing Phases Detected:**
+- Address: ✅ Detected
+- Backswing: ✅ Detected  
+- Downswing: ✅ Detected
+- Impact: ✅ Detected
+- Follow-through: ✅ Detected
+
+**Key Measurements:**
+- Shoulder Turn: 85° (Good rotation for power)
+- Hip Turn: 45° (Proper sequencing)
+- Wrist Hinge: 90° (Excellent lag potential)
+- Swing Tempo: Moderate (Consistent timing)
+
+**Video Info:** {mock_metrics['video_info']}
+
+**Note:** This demo analysis shows the type of detailed feedback the full AI system would provide when computer vision libraries are available.
+"""
             }
             
             print(f"🎭 Demo analysis complete: {result['message']}")
