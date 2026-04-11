@@ -24,25 +24,19 @@ def run_golf_crew(video_path: str, user_goal: str = "general improvement"):
     vision_analyst = Agent(
         role="Vision Analyst",
         goal="Accurately extract biomechanical metrics from iPhone golf swing videos using MediaPipe",
-        backstory="You are an expert in sports computer vision. You process videos carefully and return clean structured data.",
-        llm=llm,
-        verbose=True
+        backstory="You are an expert in sports computer vision. You process videos carefully and return clean structured data."
     )
 
     biomechanics_critic = Agent(
-        role="Golf Biomechanics Expert",
+        role="Golf Biomechanics Expert", 
         goal="Analyze the pose metrics and identify the top 2-3 swing flaws",
-        backstory="You have deep knowledge of golf swing mechanics and common amateur faults.",
-        llm=llm,
-        verbose=True
+        backstory="You have deep knowledge of golf swing mechanics and common amateur faults."
     )
 
     head_coach = Agent(
         role="PGA Teaching Professional",
         goal="Turn technical analysis into friendly, actionable coaching advice with specific drills",
-        backstory="You are a patient and motivating golf coach who helps players improve quickly.",
-        llm=llm,
-        verbose=True
+        backstory="You are a patient and motivating golf coach who helps players improve quickly."
     )
 
     # ==================== TASKS ====================
@@ -74,6 +68,7 @@ def run_golf_crew(video_path: str, user_goal: str = "general improvement"):
         agents=[vision_analyst, biomechanics_critic, head_coach],
         tasks=[task1, task2, task3],
         process="sequential",
+        llm=llm,
         verbose=True
     )
 
